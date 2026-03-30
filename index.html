@@ -2,340 +2,579 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xshare | Interview Insight</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Xshare | Data Analytics Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary: #2563eb;
+            --primary-dark: #1e3a8a;
+            --primary-light: #eff6ff;
             --success: #059669;
-            --bg: #f8fafc;
-            --card: #ffffff;
+            --success-light: #ecfdf5;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
             --border: #e2e8f0;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --like: #e11d48;
+            --bookmark: #d97706;
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate {
-            animation: slideUp 0.5s ease forwards;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #94a3b8; 
             color: var(--text-main); 
-            line-height: 1.6;
-            padding: 40px 0;
-        }
-
-        .container { max-width: 650px; margin: 0 auto; padding: 0 20px; }
-
-        /* --- TOP CARD / PROFILE --- */
-        .card {
-            background: var(--card);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        .profile-header {
             display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
         }
 
-        .profile-info h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--bg-body);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 80px; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(241, 245, 249, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top { padding: 18px 20px 10px 20px; }
+        .header-title { font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); }
+
+        .search-container { padding: 0 20px 12px 20px; display: none; }
+        .search-container.active { display: block; }
+
+        .search-bar {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .topics-scroll {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            overflow-x: auto;
+            padding: 0 20px 14px 20px;
+            gap: 8px;
+            scrollbar-width: none;
         }
+        .topics-scroll::-webkit-scrollbar { display: none; }
 
-        .verified-icon {
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        .profile-info p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .profile-info span { font-weight: 600; color: var(--text-main); }
-
-        .badge { 
-            font-size: 0.7rem; 
-            font-weight: 700; 
-            color: var(--primary); 
-            background: #eff6ff; 
-            padding: 4px 12px; 
+        .topic-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
             border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        .meta-grid { 
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 16px; 
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .meta-item i { color: var(--primary); width: 14px; }
-        .meta-item strong { color: var(--text-main); }
-
-        /* --- ROUNDS SECTION --- */
-        .section-label {
             font-size: 0.8rem;
             font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 32px 0 16px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
         }
+        .topic-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        .feed { padding: 16px; }
 
         .round-item {
-            background: var(--card);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border-radius: 14px;
             border: 1px solid var(--border);
-            margin-bottom: 12px;
-            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            animation: fadeIn 0.4s ease-out;
         }
 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .round-header {
-            padding: 12px 20px;
-            background: #f1f5f9;
+            padding: 10px 16px;
+            background: #f8fafc;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-radius: 14px 14px 0 0;
         }
 
-        .round-header h3 { font-size: 0.85rem; font-weight: 700; }
-        .round-count { color: var(--primary); font-weight: 800; font-size: 0.75rem; }
+        .round-header h3 { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .qa-block { padding: 16px 20px; }
-        .qa-row { display: flex; gap: 16px; margin-bottom: 12px; }
-        .qa-row:last-child { margin-bottom: 0; }
-        
-        .indicator { 
-            font-weight: 800; 
-            font-size: 0.9rem; 
-            min-width: 18px; 
-        }
-        .q-ind { color: var(--primary); }
-        .a-ind { color: var(--success); }
+        .actions { display: flex; gap: 12px; }
+        .action-btn { background: transparent; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 0.75rem; }
+        .action-btn.liked { color: var(--like); }
+        .action-btn.saved { color: var(--bookmark); }
 
-        .content h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
-        .content p { font-size: 0.9rem; color: var(--text-muted); }
+        .qa-block { padding: 16px; }
+        .qa-row { display: flex; gap: 12px; margin-bottom: 10px; }
+        .indicator { min-width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; }
+        .q-ind { color: var(--primary); background: var(--primary-light); }
+        .a-ind { color: var(--success); background: var(--success-light); }
 
-        /* --- COMMENT SECTION --- */
-        .comments-section {
-            margin-top: 40px;
-            padding-top: 24px;
-            border-top: 2px solid var(--border);
-        }
+        .content h4 { font-size: 0.95rem; font-weight: 700; line-height: 1.4; margin-bottom: 4px; color: var(--text-main); }
+        .content p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
 
-        .comment-input-area {
+        .answer-wrapper { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            border-top: 1px solid var(--border);
             display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
+            padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+            z-index: 1000;
         }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            flex-shrink: 0;
-        }
-
-        .comment-box {
-            flex-grow: 1;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            cursor: text;
-        }
-
-        .comment-list { list-style: none; }
-        .comment-item { display: flex; gap: 12px; margin-bottom: 20px; }
-        .comment-content {
-            background: #f1f5f9;
-            padding: 12px 16px;
-            border-radius: 0 16px 16px 16px;
-            font-size: 0.85rem;
-        }
-        .comment-content b { display: block; margin-bottom: 4px; font-size: 0.9rem; color: var(--text-main); }
-
+        .nav-item { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.6rem; font-weight: 800; gap: 4px; text-transform: uppercase; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        
-        <section class="card animate">
-            <div class="profile-header">
-                <div class="avatar">X</div>
-                <div class="profile-info">
-                    <h2>X Share <i class="fa-solid fa-circle-check verified-icon"></i></h2>
-                    <p>admin @ <span>NOI</span></p>
-                </div>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-top"><div class="header-title" id="headerTitle">Data Analytics</div></div>
+            <div class="search-container" id="searchContainer">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search unique answers..." onkeyup="applyFilters()">
             </div>
-            <span class="badge">INTERNSHIP INSIGHT</span>
-            
-            <div class="meta-grid">
-                <div class="meta-item">
-                    <i class="fa-solid fa-building"></i>
-                    <div><strong>Google</strong></div>
-                </div>
-                <div class="meta-item">
-                    <i class="fa-solid fa-calendar"></i>
-                    <div>3/29/2026</div>
-                </div>
-                <div class="meta-item">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <div>Bangalore</div>
-                </div>
+            <div class="topics-scroll" id="topicScroll">
+                <div class="topic-pill active" onclick="filterCategory('All', this)">All</div>
+                <div class="topic-pill" onclick="filterCategory('SQL', this)">SQL</div>
+                <div class="topic-pill" onclick="filterCategory('Excel', this)">Excel</div>
+                <div class="topic-pill" onclick="filterCategory('Pandas', this)">Pandas</div>
+                <div class="topic-pill" onclick="filterCategory('NumPy', this)">NumPy</div>
+                <div class="topic-pill" onclick="filterCategory('Visualization', this)">Stats/Viz</div>
             </div>
-        </section>
+        </header>
 
-        <div class="section-label"><i class="fa-solid fa-layer-group"></i> Interview Rounds</div>
+        <main class="feed" id="feedContainer">
+            <div style="text-align:center; padding:50px; color:var(--primary); font-weight: 700;">Initializing Library...</div>
+        </main>
 
-        <div class="round-item animate" style="animation-delay: 0.2s;">
-            <div class="round-header">
-                <h3>Online Assessment</h3>
-                <span class="round-count">01</span>
-            </div>
-            <div class="qa-block">
-                <div class="qa-row">
-                    <div class="indicator q-ind">Q</div>
-                    <div class="content"><h4>Two Sum problem</h4></div>
-                </div>
-                <div class="qa-row">
-                    <div class="indicator a-ind">A</div>
-                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="round-item animate" style="animation-delay: 0.3s;">
-            <div class="round-header">
-                <h3>Technical Interview</h3>
-                <span class="round-count">02</span>
-            </div>
-            <div class="qa-block">
-                <div class="qa-row">
-                    <div class="indicator q-ind">Q</div>
-                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
-                </div>
-                <div class="qa-row">
-                    <div class="indicator a-ind">A</div>
-                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
-                </div>
-            </div>
-            <div class="qa-block">
-                <div class="qa-row">
-                    <div class="indicator q-ind">Q</div>
-                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
-                </div>
-                <div class="qa-row">
-                    <div class="indicator a-ind">A</div>
-                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
-                </div>
-            </div>
-            
-            <div class="qa-block">
-                <div class="qa-row">
-                    <div class="indicator q-ind">Q</div>
-                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
-                </div>
-                <div class="qa-row">
-                    <div class="indicator a-ind">A</div>
-                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
-                </div>
-            </div>
-            
-            <div class="qa-block">
-                <div class="qa-row">
-                    <div class="indicator q-ind">Q</div>
-                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
-                </div>
-                <div class="qa-row">
-                    <div class="indicator a-ind">A</div>
-                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="comments-section animate" style="animation-delay: 0.4s;">
-            <div class="section-label" style="margin-top: 0;">Discussion (2)</div>
-            
-            <div class="comment-input-area">
-                <div class="user-avatar"></div>
-                <div class="comment-box">Write a comment...</div>
-            </div>
-
-            <ul class="comment-list">
-                <li class="comment-item">
-                    <div class="user-avatar" style="background: #cbd5e1;"></div>
-                    <div class="comment-content">
-                        <b>Rohan Verma</b>
-                        Great insight! Was the OA held on HackerRank or a proprietary platform?
-                    </div>
-                </li>
-                <li class="comment-item">
-                    <div class="user-avatar" style="background: #94a3b8;"></div>
-                    <div class="comment-content">
-                        <b>Ananya S.</b>
-                        Thanks for sharing the complexity details. Very helpful for revision.
-                    </div>
-                </li>
-            </ul>
-        </div>
-
+        <nav class="bottom-nav">
+            <button class="nav-item active" id="navHome" onclick="toggleView('home')">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span>
+            </button>
+            <button class="nav-item" id="navSearch" onclick="toggleView('search')">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>Search</span>
+            </button>
+            <button class="nav-item" id="navSaved" onclick="toggleView('saved')">
+                <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg><span>Saved</span>
+            </button>
+        </nav>
     </div>
 
+    <script>
+        // DATA DEFINITIONS (250+ Unique Questions)
+        const getUniqueData = () => {
+            const data = [];
+            
+            const sql = [
+                ["Inner Join", "Returns records with matching values in both tables."],
+                ["Left Join", "Returns all records from the left table and matching from the right."],
+                ["Right Join", "Returns all records from the right table and matching from the left."],
+                ["Primary Key", "Uniquely identifies each row; cannot be null."],
+                ["Foreign Key", "Links two tables by referencing a primary key."],
+                ["DELETE", "Removes specific rows; can be rolled back."],
+                ["TRUNCATE", "Removes all rows; faster, resets identity."],
+                ["DROP", "Removes the entire table structure."],
+                ["Subquery", "A query nested inside another SQL statement."],
+                ["Aggregate Function", "SUM, AVG, MIN, MAX, COUNT."],
+                ["GROUP BY", "Groups rows with the same values into summary rows."],
+                ["HAVING", "Filters records after groups are created."],
+                ["Self-Join", "Joining a table to itself."],
+                ["Index", "Data structure that speeds up data retrieval."],
+                ["View", "A virtual table based on an SQL query."],
+                ["ACID", "Atomicity, Consistency, Isolation, Durability."],
+                ["Normalization", "Organizing data to reduce redundancy (1NF, 2NF, 3NF)."],
+                ["CTE", "Common Table Expression (WITH clause)."],
+                ["Stored Procedure", "A prepared SQL statement that can be reused."],
+                ["Trigger", "Action that runs automatically on DB events."],
+                ["CHAR vs VARCHAR", "CHAR is fixed length; VARCHAR is variable length."],
+                ["Cross Join", "Returns Cartesian product of two tables."],
+                ["Union", "Combines result sets of two SELECTs (unique)."],
+                ["Union All", "Combines result sets including duplicates."],
+                ["Distinct", "Removes duplicate records from a result set."],
+                ["Coalesce", "Returns the first non-null value in a list."],
+                ["DDL", "Data Definition Language (CREATE, ALTER, DROP)."],
+                ["DML", "Data Manipulation Language (SELECT, INSERT, UPDATE)."],
+                ["DCL", "Data Control Language (GRANT, REVOKE)."],
+                ["Clustered Index", "Determines physical order of data in table."],
+                ["Non-Clustered Index", "Separate structure containing pointers to data."],
+                ["Composite Key", "Primary key made of multiple columns."],
+                ["Window Function", "Performs calculation across set of rows related to current row."],
+                ["Rank()", "Assigns rank with gaps after ties."],
+                ["Dense_Rank()", "Assigns rank without gaps after ties."],
+                ["Row_Number()", "Unique sequential number for each row."],
+                ["Lead()", "Accesses data from a subsequent row."],
+                ["Lag()", "Accesses data from a previous row."],
+                ["Between", "Filters range between two values inclusive."],
+                ["Like", "Search pattern in columns (%, _)."],
+                ["In Operator", "Allows multiple values in WHERE clause."],
+                ["Exists", "Checks for existence of rows in subquery."],
+                ["Case Statement", "SQL if-then logic."],
+                ["Auto_Increment", "Generates unique number for new rows."],
+                ["Unique Constraint", "Ensures all values in column are different."],
+                ["Default Constraint", "Sets default value for column if none specified."],
+                ["Scalar Function", "Returns single value based on input."],
+                ["Full Outer Join", "Returns all records when there's a match in left OR right."],
+                ["Deadlock", "Two transactions waiting for each other to release locks."],
+                ["Transaction Log", "File recording all changes made to database."]
+            ];
+
+            const excel = [
+                ["VLOOKUP", "Looks for value in leftmost column of range."],
+                ["XLOOKUP", "Modern replacement for VLOOKUP; works in any direction."],
+                ["INDEX MATCH", "Flexible alternative to VLOOKUP using two functions."],
+                ["Pivot Table", "Summarizes large datasets instantly."],
+                ["Conditional Formatting", "Changes cell appearance based on rules."],
+                ["Relative Reference", "A1 (changes when copied)."],
+                ["Absolute Reference", "$A$1 (stays fixed when copied)."],
+                ["Goal Seek", "Finds input needed for specific result."],
+                ["Data Validation", "Limits input type/values in a cell."],
+                ["Power Query", "ETL tool for cleaning/transforming data."],
+                ["Excel Macro", "Recorded steps to automate tasks (VBA)."],
+                ["Slicer", "Visual filter for Pivot Tables."],
+                ["Sparklines", "Miniature charts in a single cell."],
+                ["Flash Fill", "Automatically fills data based on pattern."],
+                ["IFERROR", "Returns custom value if formula fails."],
+                ["TEXTJOIN", "Combines text with delimiters, ignoring empties."],
+                ["COUNT vs COUNTA", "Numbers only vs all non-empty cells."],
+                ["SUMIFS", "Sums cells based on multiple criteria."],
+                ["VBA", "Visual Basic for Applications (Excel programming)."],
+                ["Concatenate", "Joins multiple text strings together."],
+                ["Name Manager", "Defines names for cell ranges."],
+                ["Trace Precedents", "Shows cells that affect current formula."],
+                ["Freeze Panes", "Locks rows/cols while scrolling."],
+                ["Transpose", "Flips rows and columns."],
+                ["PMT Function", "Calculates loan payments."],
+                ["Array Formula", "Performs multiple calculations on one or more sets of values."],
+                ["Protected View", "Read-only mode for safety."],
+                ["Quick Access Toolbar", "Customizable shortcut bar."],
+                ["Evaluate Formula", "Steps through a complex formula parts."],
+                ["Wildcard (*)", "Represents any number of characters."],
+                ["Wildcard (?)", "Represents a single character."],
+                ["#REF Error", "Cell reference is not valid."],
+                ["#VALUE Error", "Wrong type of argument used."],
+                ["#N/A Error", "Value not available."],
+                ["#DIV/0 Error", "Division by zero."],
+                ["Solver", "Add-in for optimization and linear programming."],
+                ["Scenario Manager", "Saves different sets of values in worksheet."],
+                ["Watch Window", "Monitors cell values in different sheets."],
+                ["Indirect", "Returns reference specified by text string."],
+                ["Offset", "Returns range shifted from a starting point."],
+                ["Clean Function", "Removes non-printable characters."],
+                ["Trim Function", "Removes extra spaces."],
+                ["Proper Function", "Capitalizes first letter of words."],
+                ["Datedif", "Calculates difference between two dates."],
+                ["Networkdays", "Working days between two dates."],
+                ["Upper/Lower", "Changes text case."],
+                ["Large/Small", "Finds k-th largest/smallest value."],
+                ["Choose", "Selects value from list by index."],
+                ["Substitute", "Replaces specific text with new text."],
+                ["Replace", "Replaces characters at specific position."]
+            ];
+
+            const pandas = [
+                ["DataFrame", "2D labeled data structure."],
+                ["Series", "1D labeled array."],
+                ["read_csv", "Loads CSV data into DataFrame."],
+                ["loc", "Label-based selection."],
+                ["iloc", "Integer-based selection."],
+                ["dropna", "Removes missing values."],
+                ["fillna", "Replaces missing values."],
+                ["groupby", "Splits data for aggregation."],
+                ["merge", "Database-style joins."],
+                ["concat", "Stacks DataFrames vertically/horizontally."],
+                ["describe", "Summary statistics for numeric columns."],
+                ["info", "DataFrame schema and memory info."],
+                ["head/tail", "View first/last few rows."],
+                ["rename", "Changes column/index labels."],
+                ["reset_index", "Converts index to column."],
+                ["set_index", "Sets column as index."],
+                ["apply", "Runs function along axis."],
+                ["map", "Element-wise substitution in Series."],
+                ["pivot", "Reshapes data based on column values."],
+                ["melt", "Unpivots DataFrame (wide to long)."],
+                ["unique", "Finds unique values in Series."],
+                ["nunique", "Counts unique values."],
+                ["sort_values", "Sorts by specific column."],
+                ["duplicated", "Identifies duplicate rows."],
+                ["drop_duplicates", "Removes duplicates."],
+                ["astype", "Changes column data type."],
+                ["isin", "Filters based on list of values."],
+                ["query", "Filters using string expression."],
+                ["shape", "Returns (rows, columns) tuple."],
+                ["columns", "List of column names."],
+                ["to_datetime", "Converts string to date objects."],
+                ["T (Transpose)", "Flips rows and columns."],
+                ["sample", "Random selection of rows."],
+                ["value_counts", "Frequency of each value."],
+                ["isnull", "Detects missing data."],
+                ["notnull", "Detects non-missing data."],
+                ["nsmallest/nlargest", "Retrieves top/bottom N values."],
+                ["at/iat", "Fast scalar access (label/integer)."],
+                ["explode", "Transforms list-like to rows."],
+                ["get_dummies", "One-hot encoding for categories."],
+                ["clip", "Trims values at thresholds."],
+                ["where", "Replaces values where condition is False."],
+                ["mask", "Replaces values where condition is True."],
+                ["corr", "Correlation matrix."],
+                ["pct_change", "Percentage change between rows."],
+                ["rolling", "Rolling window calculations."],
+                ["expanding", "Cumulative calculations."],
+                ["between_time", "Selects values at specific times."],
+                ["resample", "Time-series frequency conversion."],
+                ["shift", "Moves data up or down."]
+            ];
+
+            const numpy = [
+                ["Array", "Grid of same-type values."],
+                ["Broadcasting", "Operations on different shaped arrays."],
+                ["np.zeros", "Array of all zeros."],
+                ["np.ones", "Array of all ones."],
+                ["np.empty", "Uninitialized array (fastest)."],
+                ["np.arange", "Range of numbers as array."],
+                ["np.linspace", "Evenly spaced numbers over interval."],
+                ["reshape", "Changes dimensions without changing data."],
+                ["flatten", "Collapses array into 1D."],
+                ["dot", "Matrix multiplication."],
+                ["transpose", "Permutes array axes."],
+                ["concatenate", "Joins arrays."],
+                ["split", "Divides array into sub-arrays."],
+                ["mean/median/std", "Basic statistical functions."],
+                ["sum/prod", "Sum or product of elements."],
+                ["min/max", "Extremes in array."],
+                ["argmin/argmax", "Indices of min/max values."],
+                ["sqrt", "Element-wise square root."],
+                ["exp", "Exponential function."],
+                ["log", "Natural logarithm."],
+                ["abs", "Absolute values."],
+                ["ceil/floor", "Rounding functions."],
+                ["clip", "Limits values in array."],
+                ["where", "Vectorized if-else."],
+                ["unique", "Unique elements."],
+                ["sort", "Returns sorted copy of array."],
+                ["searchsorted", "Finds indices to maintain order."],
+                ["nan", "Not a Number constant."],
+                ["inf", "Infinity constant."],
+                ["random.rand", "Random values [0, 1)."],
+                ["random.randn", "Standard normal distribution."],
+                ["random.randint", "Random integers."],
+                ["save/load", "Binary persistence."],
+                ["eye", "Identity matrix."],
+                ["diag", "Extracts or constructs diagonal."],
+                ["tile", "Repeats array."],
+                ["repeat", "Repeats elements."],
+                ["vsplit/hsplit", "Vertical/Horizontal splitting."],
+                ["vstack/hstack", "Vertical/Horizontal stacking."],
+                ["dstack", "Depth stacking (3D)."],
+                ["cross", "Cross product."],
+                ["inner", "Inner product."],
+                ["outer", "Outer product."],
+                ["polyfit", "Least squares polynomial fit."],
+                ["linalg.inv", "Matrix inverse."],
+                ["linalg.det", "Matrix determinant."],
+                ["linalg.eig", "Eigenvalues/vectors."],
+                ["all/any", "Logical tests over array."],
+                ["isclose", "Element-wise approximate equality."],
+                ["histogram", "Computes histogram data."]
+            ];
+
+            const viz = [
+                ["Box Plot", "Visualizes distribution and outliers."],
+                ["Histogram", "Frequency distribution of numeric data."],
+                ["Scatter Plot", "Relationship between two variables."],
+                ["Heatmap", "Correlation or density using colors."],
+                ["Bar Chart", "Categorical comparisons."],
+                ["Line Chart", "Trends over time."],
+                ["Violin Plot", "Distribution density + box plot."],
+                ["Pair Plot", "Pairwise relationships in dataset."],
+                ["Central Limit Theorem", "Sample means approximate normal distribution."],
+                ["P-Value", "Probability of observing results by chance."],
+                ["Standard Deviation", "Measure of data dispersion."],
+                ["Variance", "Squared standard deviation."],
+                ["Correlation", "Strength of linear relationship."],
+                ["Causation", "One event strictly causes another."],
+                ["R-Squared", "Goodness of fit in regression."],
+                ["Normal Distribution", "Symmetric bell curve."],
+                ["Skewness", "Asymmetry in distribution."],
+                ["Kurtosis", "Tailedness of distribution."],
+                ["Outlier", "Observation distant from others."],
+                ["A/B Testing", "Comparing two versions statistically."],
+                ["Confidence Interval", "Range likely to contain population parameter."],
+                ["Z-Score", "Number of standard deviations from mean."],
+                ["Hypothesis Testing", "Statistical decision-making process."],
+                ["Null Hypothesis", "Assumption of no effect/difference."],
+                ["Type I Error", "False Positive (rejecting true null)."],
+                ["Type II Error", "False Negative (failing to reject false null)."],
+                ["Linear Regression", "Predicting numeric Y from X."],
+                ["Logistic Regression", "Predicting binary probability."],
+                ["Precision", "Accuracy of positive predictions."],
+                ["Recall", "Sensitivity/True Positive Rate."],
+                ["F1-Score", "Harmonic mean of Precision/Recall."],
+                ["Overfitting", "Model too complex for data."],
+                ["Underfitting", "Model too simple for data."],
+                ["Mean Absolute Error", "Average magnitude of errors."],
+                ["Root Mean Squared Error", "Standard deviation of residuals."],
+                ["Random Forest", "Ensemble of decision trees."],
+                ["K-Means", "Unsupervised clustering algorithm."],
+                ["PCA", "Dimensionality reduction technique."],
+                ["Time Series", "Data points indexed by time."],
+                ["Data Imputation", "Filling missing values."],
+                ["Standardization", "Mean=0, Std=1 scaling."],
+                ["Normalization (Scaling)", "0 to 1 range scaling."],
+                ["Categorical Data", "Qualitative labels."],
+                ["Continuous Data", "Quantitative measurements."],
+                ["Ordinal Data", "Categories with specific order."],
+                ["Mode", "Most frequent value."],
+                ["Range", "Difference between Max and Min."],
+                ["Interquartile Range", "Q3 minus Q1."],
+                ["Law of Large Numbers", "Sample mean approaches population mean."],
+                ["Degrees of Freedom", "Independent pieces of information."]
+            ];
+
+            // Build total dataset
+            sql.forEach(i => data.push({c: "SQL", q: i[0], a: i[1]}));
+            excel.forEach(i => data.push({c: "Excel", q: i[0], a: i[1]}));
+            pandas.forEach(i => data.push({c: "Pandas", q: i[0], a: i[1]}));
+            numpy.forEach(i => data.push({c: "NumPy", q: i[0], a: i[1]}));
+            viz.forEach(i => data.push({c: "Visualization", q: i[0], a: i[1]}));
+
+            return data;
+        };
+
+        const DB_NAME = 'XShare_Insight_DB_V12'; // Incremented version to force update
+        const STORE_NAME = 'qaStore';
+        let db, activeData = [], currentCategory = 'All', currentView = 'home';
+
+        async function initDB() {
+            return new Promise((res) => {
+                const req = indexedDB.open(DB_NAME, 1);
+                req.onupgradeneeded = (e) => {
+                    const store = e.target.result.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                    const raw = getUniqueData();
+                    raw.forEach((d, i) => store.add({
+                        id: i+1, 
+                        c: d.c, 
+                        q: d.q, 
+                        a: d.a, 
+                        saved: false, 
+                        liked: false, 
+                        likes: Math.floor(Math.random()*300 + 20)
+                    }));
+                };
+                req.onsuccess = (e) => { db = e.target.result; res(); };
+            });
+        }
+
+        async function loadData() {
+            return new Promise(res => {
+                db.transaction(STORE_NAME).objectStore(STORE_NAME).getAll().onsuccess = (e) => { 
+                    activeData = e.target.result; 
+                    res(); 
+                };
+            });
+        }
+
+        function renderFeed(data) {
+            const container = document.getElementById('feedContainer');
+            container.innerHTML = '';
+            if (!data.length) { 
+                container.innerHTML = '<div style="text-align:center; padding:50px; color:var(--text-muted);">No insights match your criteria.</div>'; 
+                return; 
+            }
+
+            data.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'round-item';
+                div.innerHTML = `
+                    <div class="round-header">
+                        <h3>${item.c}</h3>
+                        <div class="actions">
+                            <button class="action-btn ${item.liked?'liked':''}" onclick="toggleLike(event, this, ${item.id})">
+                                <i class="${item.liked?'fa-solid':'fa-regular'} fa-heart"></i> <span>${item.likes}</span>
+                            </button>
+                            <button class="action-btn ${item.saved?'saved':''}" onclick="toggleSave(event, this, ${item.id})">
+                                <i class="${item.saved?'fa-solid':'fa-regular'} fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="qa-block">
+                        <div class="qa-row"><div class="indicator q-ind">Q</div><div class="content"><h4>${item.q}</h4></div></div>
+                        <div class="answer-wrapper"><div class="qa-row"><div class="indicator a-ind">A</div><div class="content"><p>${item.a}</p></div></div></div>
+                    </div>`;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleLike(e, btn, id) {
+            const item = activeData.find(d => d.id === id);
+            item.liked = !item.liked; item.likes += item.liked ? 1 : -1;
+            btn.classList.toggle('liked');
+            btn.innerHTML = `<i class="${item.liked?'fa-solid':'fa-regular'} fa-heart"></i> <span>${item.likes}</span>`;
+            db.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).put(item);
+        }
+
+        function toggleSave(e, btn, id) {
+            const item = activeData.find(d => d.id === id);
+            item.saved = !item.saved;
+            btn.classList.toggle('saved');
+            btn.innerHTML = `<i class="${item.saved?'fa-solid':'fa-regular'} fa-bookmark"></i>`;
+            db.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).put(item);
+        }
+
+        function filterCategory(cat, el) {
+            document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active'); 
+            currentCategory = cat; 
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = [...activeData];
+            if (currentView === 'saved') filtered = filtered.filter(d => d.saved);
+            if (currentCategory !== 'All') filtered = filtered.filter(d => d.c === currentCategory);
+            if (term) filtered = filtered.filter(d => d.q.toLowerCase().includes(term) || d.a.toLowerCase().includes(term));
+            renderFeed(filtered);
+        }
+
+        function toggleView(view) {
+            currentView = view;
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('nav' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('active');
+            document.getElementById('searchContainer').classList.toggle('active', view === 'search');
+            document.getElementById('headerTitle').innerText = view === 'saved' ? 'Saved Insights' : 'Insights';
+            applyFilters();
+        }
+
+        (async () => { 
+            await initDB(); 
+            await loadData(); 
+            applyFilters(); 
+        })();
+    </script>
 </body>
 </html>
