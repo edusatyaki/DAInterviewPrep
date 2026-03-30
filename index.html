@@ -2,825 +2,340 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PrepFeed | Pro Interview Flashcards</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xshare | Interview Insight</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-body: #e2e8f0;
-            --bg-app: #ffffff;
-            --bg-hover: #f8fafc;
-            --text-main: #0f172a;
+            --primary: #2563eb;
+            --success: #059669;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
             --text-muted: #64748b;
-            --border: #f1f5f9;
-            
-            --primary: #6366f1;      /* Indigo */
-            --primary-light: #e0e7ff;
-            --bookmark: #f59e0b;     /* Amber */
-            --like: #ec4899;         /* Pink */
-            --category-tag: #cbd5e1;
-            
-            /* Avatar Gradients */
-            --avatar-bg: #0f172a;
-            --avatar-glow: rgba(99, 102, 241, 0.4);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 600px;
-            background-color: var(--bg-app);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.08);
-        }
-
-        /* Header */
-        .header {
-            position: sticky;
-            top: 0;
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-        }
-
-        .header-title {
-            font-size: 1.35rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--text-main);
-        }
-
-        .search-container {
-            padding: 0 20px 12px 20px;
-            display: none;
-        }
-        .search-container.active { display: block; animation: slideDown 0.3s ease; }
-
-        .search-bar {
-            width: 100%;
-            background-color: var(--bg-hover);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            outline: none;
-            color: var(--text-main);
-            transition: all 0.2s ease;
-        }
-        .search-bar:focus {
-            background-color: #ffffff;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-light);
-        }
-
-        /* Topics Scroll */
-        .topics-scroll {
-            display: flex;
-            overflow-x: auto;
-            padding: 0 20px 16px 20px;
-            gap: 10px;
-            scrollbar-width: none; 
-        }
-        .topics-scroll::-webkit-scrollbar { display: none; } 
-
-        .topic-pill {
-            background-color: var(--bg-app);
-            border: 1.5px solid var(--border);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .topic-pill:hover { border-color: var(--category-tag); color: var(--text-main); }
-        .topic-pill.active {
-            background-color: var(--text-main);
-            color: #ffffff;
-            border-color: var(--text-main);
-            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
-        }
-
-        /* Feed */
-        .feed {
-            flex-grow: 1;
-            padding-bottom: 80px; 
-            overflow-y: auto;
-        }
-
-        .post {
-            display: flex;
-            padding: 24px 20px;
-            border-bottom: 1px solid var(--border);
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-        .post:hover { background-color: var(--bg-hover); }
-
-        /* UPGRADED Q BOX AVATAR */
-        .post-avatar-wrapper {
-            margin-right: 16px;
-            flex-shrink: 0;
-            position: relative;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        .post-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 16px var(--avatar-glow), inset 0 1px 1px rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-            z-index: 2;
-        }
-        
-        .post-avatar svg {
-            width: 24px;
-            height: 24px;
-            fill: url(#avatarGradient);
-            filter: drop-shadow(0 0 4px rgba(129, 140, 248, 0.8));
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .post-content { flex-grow: 1; min-width: 0; }
-
-        .post-meta {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            flex-wrap: wrap;
-        }
-        .post-author {
-            font-weight: 800;
-            color: var(--text-main);
-            margin-right: 8px;
-        }
-        .post-category {
-            color: var(--primary);
-            font-weight: 700;
-            background: var(--primary-light);
-            padding: 3px 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .animate {
+            animation: slideUp 0.5s ease forwards;
         }
 
-        .post-question {
-            font-size: 1.15rem;
-            line-height: 1.5;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-main);
-            word-wrap: break-word;
-        }
-
-        .post-answer-wrapper {
-            display: none;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px dashed #cbd5e1;
-            animation: fadeIn 0.3s ease;
-        }
-        .post.open .post-answer-wrapper { display: block; }
-
-        .post-answer {
-            color: var(--text-muted);
-            font-size: 1.05rem;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text-main); 
             line-height: 1.6;
+            padding: 40px 0;
         }
 
-        .answer-label {
-            display: inline-block;
+        .container { max-width: 650px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- TOP CARD / PROFILE --- */
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .profile-info h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-icon {
             color: var(--primary);
-            background-color: var(--primary-light);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .profile-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .profile-info span { font-weight: 600; color: var(--text-main); }
+
+        .badge { 
+            font-size: 0.7rem; 
+            font-weight: 700; 
+            color: var(--primary); 
+            background: #eff6ff; 
+            padding: 4px 12px; 
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .meta-grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px; 
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item i { color: var(--primary); width: 14px; }
+        .meta-item strong { color: var(--text-main); }
+
+        /* --- ROUNDS SECTION --- */
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin: 32px 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Post Actions */
-        .post-actions {
+        .round-item {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .round-header {
+            padding: 12px 20px;
+            background: #f1f5f9;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            margin-top: 16px;
-            max-width: 280px;
-        }
-        .action-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            display: flex;
             align-items: center;
-            gap: 6px;
+        }
+
+        .round-header h3 { font-size: 0.85rem; font-weight: 700; }
+        .round-count { color: var(--primary); font-weight: 800; font-size: 0.75rem; }
+
+        .qa-block { padding: 16px 20px; }
+        .qa-row { display: flex; gap: 16px; margin-bottom: 12px; }
+        .qa-row:last-child { margin-bottom: 0; }
+        
+        .indicator { 
+            font-weight: 800; 
+            font-size: 0.9rem; 
+            min-width: 18px; 
+        }
+        .q-ind { color: var(--primary); }
+        .a-ind { color: var(--success); }
+
+        .content h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .content p { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- COMMENT SECTION --- */
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 2px solid var(--border);
+        }
+
+        .comment-input-area {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .comment-box {
+            flex-grow: 1;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: text;
+        }
+
+        .comment-list { list-style: none; }
+        .comment-item { display: flex; gap: 12px; margin-bottom: 20px; }
+        .comment-content {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 0 16px 16px 16px;
             font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            padding: 6px 8px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
         }
-        .action-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .action-btn:hover { background-color: var(--border); }
-        .action-btn.like-btn.liked { color: var(--like); }
-        .action-btn.like-btn.liked svg { transform: scale(1.15); }
-        .action-btn.save-btn.saved { color: var(--bookmark); }
-        .action-btn.save-btn.saved svg { transform: scale(1.15); }
+        .comment-content b { display: block; margin-bottom: 4px; font-size: 0.9rem; color: var(--text-main); }
 
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 600px;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            padding-bottom: env(safe-area-inset-bottom, 12px);
-            z-index: 100;
-        }
-        .nav-item {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            gap: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            transition: color 0.2s;
-        }
-        .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
-        .nav-item.active { color: var(--primary); }
-
-        /* Utilities */
-        #loader { display: flex; justify-content: center; align-items: center; height: 200px; color: var(--primary); font-weight: 700; }
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-        .empty-state svg { width: 48px; height: 48px; fill: var(--category-tag); margin-bottom: 16px; }
-        .empty-state h3 { color: var(--text-main); margin-bottom: 8px; font-size: 1.2rem; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    
-    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
-      <linearGradient id="avatarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#818cf8" />
-        <stop offset="100%" stop-color="#c084fc" />
-      </linearGradient>
-    </svg>
 
-    <div class="app-container">
-        <header class="header">
-            <div class="header-top">
-                <div class="header-title" id="headerTitle">For You</div>
+    <div class="container">
+        
+        <section class="card animate">
+            <div class="profile-header">
+                <div class="avatar">X</div>
+                <div class="profile-info">
+                    <h2>X Share <i class="fa-solid fa-circle-check verified-icon"></i></h2>
+                    <p>admin @ <span>NOI</span></p>
+                </div>
+            </div>
+            <span class="badge">INTERNSHIP INSIGHT</span>
+            
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <i class="fa-solid fa-building"></i>
+                    <div><strong>Google</strong></div>
+                </div>
+                <div class="meta-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    <div>3/29/2026</div>
+                </div>
+                <div class="meta-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div>Bangalore</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-label"><i class="fa-solid fa-layer-group"></i> Interview Rounds</div>
+
+        <div class="round-item animate" style="animation-delay: 0.2s;">
+            <div class="round-header">
+                <h3>Online Assessment</h3>
+                <span class="round-count">01</span>
+            </div>
+            <div class="qa-block">
+                <div class="qa-row">
+                    <div class="indicator q-ind">Q</div>
+                    <div class="content"><h4>Two Sum problem</h4></div>
+                </div>
+                <div class="qa-row">
+                    <div class="indicator a-ind">A</div>
+                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="round-item animate" style="animation-delay: 0.3s;">
+            <div class="round-header">
+                <h3>Technical Interview</h3>
+                <span class="round-count">02</span>
+            </div>
+            <div class="qa-block">
+                <div class="qa-row">
+                    <div class="indicator q-ind">Q</div>
+                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
+                </div>
+                <div class="qa-row">
+                    <div class="indicator a-ind">A</div>
+                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
+                </div>
+            </div>
+            <div class="qa-block">
+                <div class="qa-row">
+                    <div class="indicator q-ind">Q</div>
+                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
+                </div>
+                <div class="qa-row">
+                    <div class="indicator a-ind">A</div>
+                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
+                </div>
             </div>
             
-            <div class="search-container" id="searchContainer">
-                <input type="text" id="searchInput" class="search-bar" placeholder="Search formulas, tools, or concepts..." onkeyup="searchQuestions()">
+            <div class="qa-block">
+                <div class="qa-row">
+                    <div class="indicator q-ind">Q</div>
+                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
+                </div>
+                <div class="qa-row">
+                    <div class="indicator a-ind">A</div>
+                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
+                </div>
+            </div>
+            
+            <div class="qa-block">
+                <div class="qa-row">
+                    <div class="indicator q-ind">Q</div>
+                    <div class="content"><h4>Reverse Linked List in Groups</h4></div>
+                </div>
+                <div class="qa-row">
+                    <div class="indicator a-ind">A</div>
+                    <div class="content"><p>Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.Discussed iterative vs recursive approaches. Optimized for space by using a three-pointer iterative method.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comments-section animate" style="animation-delay: 0.4s;">
+            <div class="section-label" style="margin-top: 0;">Discussion (2)</div>
+            
+            <div class="comment-input-area">
+                <div class="user-avatar"></div>
+                <div class="comment-box">Write a comment...</div>
             </div>
 
-            <div class="topics-scroll" id="topicScroll">
-                <div class="topic-pill active" onclick="filterCategory('All', this)">All</div>
-                <div class="topic-pill" onclick="filterCategory('Excel', this)">Excel</div>
-                <div class="topic-pill" onclick="filterCategory('NumPy', this)">NumPy</div>
-                <div class="topic-pill" onclick="filterCategory('Pandas', this)">Pandas</div>
-                <div class="topic-pill" onclick="filterCategory('Matplotlib', this)">Matplotlib</div>
-                <div class="topic-pill" onclick="filterCategory('Tableau', this)">Tableau</div>
-                <div class="topic-pill" onclick="filterCategory('Statistics', this)">Statistics</div>
-                <div class="topic-pill" onclick="filterCategory('Analysis', this)">Analysis</div>
-            </div>
-        </header>
+            <ul class="comment-list">
+                <li class="comment-item">
+                    <div class="user-avatar" style="background: #cbd5e1;"></div>
+                    <div class="comment-content">
+                        <b>Rohan Verma</b>
+                        Great insight! Was the OA held on HackerRank or a proprietary platform?
+                    </div>
+                </li>
+                <li class="comment-item">
+                    <div class="user-avatar" style="background: #94a3b8;"></div>
+                    <div class="comment-content">
+                        <b>Ananya S.</b>
+                        Thanks for sharing the complexity details. Very helpful for revision.
+                    </div>
+                </li>
+            </ul>
+        </div>
 
-        <main class="feed" id="feedContainer">
-            <div id="loader">Initializing Database...</div>
-        </main>
-
-        <nav class="bottom-nav">
-            <button class="nav-item active" id="navHome" onclick="toggleView('home')">
-                <svg viewBox="0 0 24 24"><path d="M12 1.696l-10.99 9.948v10.66h21.98v-10.66L12 1.696zm-9 11.594l9-8.145 9 8.145v7.061h-18v-7.061z"></path><path d="M9 14h6v7H9z"></path></svg>
-                <span>Home</span>
-            </button>
-            <button class="nav-item" id="navSearch" onclick="toggleView('search')">
-                <svg viewBox="0 0 24 24"><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></svg>
-                <span>Search</span>
-            </button>
-            <button class="nav-item" id="navSaved" onclick="toggleView('saved')">
-                <svg viewBox="0 0 24 24"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.224-.5.5v14.56l6-4.29 6 4.29V4.5c0-.276-.224-.5-.5-.5h-11z"></path></svg>
-                <span>Bookmarks</span>
-            </button>
-        </nav>
     </div>
 
-    <script>
-        // 250 Condensed Questions Payload
-        const compressedData = [
-            // Excel (40)
-            ["Excel", "VLOOKUP vs INDEX/MATCH?", "VLOOKUP searches right only. INDEX/MATCH is bidirectional and won't break if columns are inserted."],
-            ["Excel", "Handle #N/A errors?", "Wrap your formula in IFERROR() to return a blank or custom text instead of the error."],
-            ["Excel", "What is a Calculated Field in Pivot Tables?", "A custom field created by performing math on existing Pivot Table fields (e.g. = Profit / Sales)."],
-            ["Excel", "Difference: COUNT, COUNTA, COUNTBLANK?", "COUNT measures numbers, COUNTA measures any non-empty cells, COUNTBLANK measures empty cells."],
-            ["Excel", "Explain SUMPRODUCT.", "Multiplies arrays together and sums the total. Great for complex multi-criteria calculations."],
-            ["Excel", "Absolute vs Relative references?", "Relative (A1) shifts when dragged. Absolute ($A$1) locks the exact cell."],
-            ["Excel", "What is XLOOKUP?", "Modern VLOOKUP replacement. Defaults to exact match, searches any direction."],
-            ["Excel", "How to extract first name?", "Use Text-to-Columns, or LEFT() combined with FIND(\" \")."],
-            ["Excel", "What is Power Query?", "An ETL tool in Excel used to connect, clean, and shape massive data sources before loading."],
-            ["Excel", "What is Power Pivot?", "Data Model add-in allowing multi-table relationships and DAX formulas for millions of rows."],
-            ["Excel", "Goal Seek?", "A What-If tool that changes one input cell until a target formula reaches your desired value."],
-            ["Excel", "Solver Add-in?", "Optimizes a target cell (max/min/value) by changing multiple variables subject to constraints."],
-            ["Excel", "Dynamic Array Formulas?", "Modern functions (UNIQUE, FILTER, SORT) that automatically spill results into adjacent blank cells."],
-            ["Excel", "Create a dependent drop-down?", "Use Data Validation with the INDIRECT function referencing the first drop-down cell."],
-            ["Excel", "Circular reference?", "When a formula points back to its own cell, creating an infinite loop."],
-            ["Excel", "What is Flash Fill?", "Excel's AI tool (Ctrl+E) that auto-fills data by recognizing patterns (like formatting phone numbers)."],
-            ["Excel", "What does TRIM do?", "Removes all leading, trailing, and double spaces from a text string."],
-            ["Excel", "What is OFFSET?", "Volatile function returning a range shifted a specific number of rows/cols from a starting cell."],
-            ["Excel", "Find duplicates quickly?", "Use Conditional Formatting -> Highlight Cell Rules -> Duplicate Values."],
-            ["Excel", "What does AGGREGATE do?", "Runs functions like SUM or AVERAGE but can ignore hidden rows, errors, and subtotals."],
-            ["Excel", "How to lock specific cells?", "Format Cells -> Unlock desired cells -> Protect Sheet."],
-            ["Excel", "What are Slicers?", "Visual, click-based filters for Pivot Tables and structured Excel Tables."],
-            ["Excel", "What is a volatile function?", "Recalculates every time ANY cell changes (TODAY, NOW, OFFSET, INDIRECT), slowing down large files."],
-            ["Excel", "Calculate days between dates?", "Subtract the older date from the newer date, or use DATEDIF()."],
-            ["Excel", "What is the PMT function?", "Calculates the periodic payment for a loan assuming constant payments and interest rate."],
-            ["Excel", "How to transpose data?", "Copy -> Paste Special -> Transpose, or use the =TRANSPOSE() array function."],
-            ["Excel", "SUMIF vs SUMIFS?", "SUMIF handles one criteria. SUMIFS handles multiple (and puts the sum_range first)."],
-            ["Excel", "Group Pivot Table by month?", "Right-click a date field in the Pivot -> Group -> Select Months and Years."],
-            ["Excel", "What is EOMONTH?", "Returns the last day of the month, a specified number of months forward or backward."],
-            ["Excel", "Trace Precedents?", "Auditing tool that draws arrows showing which cells affect the active cell's formula."],
-            ["Excel", "Helper Column?", "An extra column created to break a highly complex formula into simpler, readable steps."],
-            ["Excel", "Convert text to real dates?", "Use DATEVALUE() or Text-to-Columns specifying Date format."],
-            ["Excel", "What is GETPIVOTDATA?", "Extracts data from a Pivot Table ensuring the correct value is pulled even if the layout changes."],
-            ["Excel", "Highlight rows conditionally?", "Use Conditional Formatting with a formula rule (e.g., =$A1=\"Done\") applied to the whole table."],
-            ["Excel", "What is a Macro?", "A recorded sequence of actions or VBA code to automate repetitive tasks."],
-            ["Excel", "Line break inside a cell?", "Press Alt + Enter (Windows) or Option + Return (Mac)."],
-            ["Excel", "EXACT function?", "Compares two strings and returns TRUE if exactly identical (case-sensitive)."],
-            ["Excel", "Remove duplicates permanently?", "Select data -> Data Tab -> Remove Duplicates."],
-            ["Excel", "Inner vs Left Join in Power Query?", "Inner keeps only matching rows. Left keeps all rows from the first table and matching from the second."],
-            ["Excel", "Combine text from cells?", "Use CONCAT(), TEXTJOIN(), or the & operator."],
-            
-            // NumPy (35)
-            ["NumPy", "What is an ndarray?", "A multidimensional, homogeneous array of fixed-size items, offering massive memory/speed efficiency."],
-            ["NumPy", "What is Vectorization?", "Applying operations to an entire array at once without explicit Python loops, using underlying C code."],
-            ["NumPy", "Explain Broadcasting.", "Rules allowing NumPy to do math on arrays of different shapes by conceptually stretching the smaller one."],
-            ["NumPy", "np.zeros() vs np.empty()?", "zeros() fills with 0s. empty() allocates memory without initializing, leaving garbage values (slightly faster)."],
-            ["NumPy", "Create sequence of numbers?", "np.arange(start, stop, step) or np.linspace(start, stop, num_elements)."],
-            ["NumPy", "Change array dimensions?", "Use np.reshape(). The new shape must contain the exact same total number of elements."],
-            ["NumPy", "flatten() vs ravel()?", "flatten() returns a copy. ravel() returns a memory-efficient view whenever possible."],
-            ["NumPy", "How does np.where() work?", "Returns elements from x or y depending on a boolean condition: np.where(condition, x, y)."],
-            ["NumPy", "Index of max value?", "Use np.argmax()."],
-            ["NumPy", "What is Boolean Indexing?", "Passing an array of True/False values (mask) inside brackets to filter data (e.g., arr[arr > 5])."],
-            ["NumPy", "np.dot() vs np.matmul()?", "Both do 2D matrix multiplication, but handle higher-dimensional arrays and scalars differently."],
-            ["NumPy", "Stack arrays vertically?", "np.vstack() or np.concatenate(axis=0)."],
-            ["NumPy", "What are Strides?", "Bytes to step in each dimension when traversing an array. Modifying strides allows zero-copy reshaping."],
-            ["NumPy", "View vs Copy?", "A view shares memory with the original array (slicing). A copy creates a separate object."],
-            ["NumPy", "Handle missing values?", "Use np.nan to represent them, and np.isnan() or np.nanmean() to handle them."],
-            ["NumPy", "Why use np.random.seed()?", "Ensures pseudo-random number generation produces the exact same results for reproducibility."],
-            ["NumPy", "Generate normal distribution?", "np.random.normal(loc=mean, scale=std, size=shape)."],
-            ["NumPy", "What is np.eye()?", "Creates a 2D array with 1s on the diagonal and 0s elsewhere (Identity matrix)."],
-            ["NumPy", "Change data type?", "Use the astype() method, e.g., arr.astype(np.float32)."],
-            ["NumPy", "Get unique values?", "Use np.unique(arr)."],
-            ["NumPy", "Sort an array?", "np.sort(arr) returns a sorted copy. arr.sort() sorts in place."],
-            ["NumPy", "Calculate 90th percentile?", "Use np.percentile(arr, 90)."],
-            ["NumPy", "What does np.clip() do?", "Limits values. Anything below min is set to min; anything above max is set to max."],
-            ["NumPy", "What is np.bincount?", "Counts occurrences of each non-negative integer in an array."],
-            ["NumPy", "What is np.meshgrid?", "Creates a rectangular grid from two 1D arrays, useful for 3D plotting."],
-            ["NumPy", "Broadcasting rule?", "Dimensions must be equal, or one must be 1. Compared from trailing edges inward."],
-            ["NumPy", "Get matrix diagonal?", "np.diag(matrix)."],
-            ["NumPy", "Reverse 1D array?", "Slicing with a negative step: arr[::-1]."],
-            ["NumPy", "Compute cross product?", "np.cross(a, b)."],
-            ["NumPy", "Add new axis?", "Use np.newaxis or None in slicing: arr[:, np.newaxis]."],
-            ["NumPy", "np.any()?", "Returns True if at least one element evaluates to True."],
-            ["NumPy", "np.all()?", "Returns True only if every single element evaluates to True."],
-            ["NumPy", "Repeat elements?", "Use np.repeat(arr, count)."],
-            ["NumPy", "np.mean vs np.average?", "average() can take a weights array for weighted averages; mean() is strictly arithmetic mean."],
-            ["NumPy", "np.append()?", "Appends values to the end of an array, but always returns a copy (unlike Python list.append)."],
-            
-            // Pandas (40)
-            ["Pandas", "Series vs DataFrame?", "A Series is a 1D column with an index. A DataFrame is a 2D table composed of multiple Series."],
-            ["Pandas", "loc vs iloc?", "loc filters by index/column labels. iloc filters by integer position (0, 1, 2)."],
-            ["Pandas", "Read CSV skipping rows?", "pd.read_csv('file.csv', skiprows=5)."],
-            ["Pandas", "Merge vs Join vs Concat?", "Concat glues arrays. Merge uses common columns (SQL-style). Join combines using indexes."],
-            ["Pandas", "Inner vs Outer Join?", "Inner keeps matching keys only. Outer keeps all records, filling missing data with NaN."],
-            ["Pandas", "How does groupby work?", "Splits data into groups by criteria, applies a function (sum/mean), and combines results."],
-            ["Pandas", "transform() vs apply()?", "apply() can return a different shape. transform() returns an object exactly the same shape as input."],
-            ["Pandas", "Handle NaN values?", "dropna() removes them, fillna() replaces them with a specified value (like the mean)."],
-            ["Pandas", "What is interpolation?", "Using .interpolate() to estimate missing values based on surrounding data points (vital for time series)."],
-            ["Pandas", "pivot() vs melt()?", "pivot() turns row values to columns (long to wide). melt() turns columns to rows (wide to long)."],
-            ["Pandas", "pivot_table()?", "Like pivot(), but allows data aggregation (mean/sum) if duplicate entries exist for indices."],
-            ["Pandas", "cut() vs qcut()?", "cut() bins data by equal value width. qcut() bins data so each bin has an equal number of records."],
-            ["Pandas", "What is MultiIndex?", "Hierarchical indexing allowing multiple levels of indexes on rows/columns for complex aggregations."],
-            ["Pandas", "reset_index()?", "Moves the current index into a column and replaces it with default integers (0, 1, 2)."],
-            ["Pandas", "Find duplicate rows?", "df.duplicated(). Drop them with df.drop_duplicates()."],
-            ["Pandas", "Rolling window?", "Used in time series to calculate metrics over a sliding timeframe (e.g., 7-day moving average)."],
-            ["Pandas", "shift() function?", "Shifts the index by a desired number of periods, useful for comparing current vs past values."],
-            ["Pandas", "Extract month from datetime?", "df['date'].dt.month."],
-            ["Pandas", "One-hot encoding?", "Converting categorical text into binary (0/1) columns using pd.get_dummies()."],
-            ["Pandas", "Optimize DataFrame memory?", "Downcast numeric types (float64 -> float32) and convert low-cardinality strings to 'category' dtypes."],
-            ["Pandas", "inplace=True?", "Modifies the DataFrame directly in memory without needing to reassign to a variable."],
-            ["Pandas", "df.describe()?", "Outputs summary statistics: count, mean, std, min, max, and quartiles for numeric columns."],
-            ["Pandas", "df.info()?", "Provides a concise summary of column names, non-null counts, dtypes, and memory usage."],
-            ["Pandas", "Count unique values?", "df['column'].value_counts()."],
-            ["Pandas", "Rename columns?", "df.rename(columns={'old': 'new'})."],
-            ["Pandas", "Filter multiple conditions?", "Wrap conditions in parenthesis and use & / | operators: df[(df['age']>20) & (df['sales']<100)]."],
-            ["Pandas", "What is crosstab()?", "Computes a simple cross-tabulation (frequency table) of two or more factors."],
-            ["Pandas", "Sort a DataFrame?", "df.sort_values(by=['col'], ascending=False)."],
-            ["Pandas", "Iterating over rows?", "Avoid iterrows() if possible; use vectorized operations or apply() because Python loops are slow."],
-            ["Pandas", "set_index()?", "Sets an existing column as the new index (row labels) of the DataFrame."],
-            ["Pandas", "Check for nulls?", "df.isna() or df.isnull(). Append .sum() to count them per column."],
-            ["Pandas", "Replace specific values?", "df.replace({'old_val': 'new_val'})."],
-            ["Pandas", "What is a Timedelta?", "Represents an absolute duration or difference between two datetime objects."],
-            ["Pandas", "Append a row?", "Use pd.concat() to join the original DataFrame with a new one-row DataFrame."],
-            ["Pandas", "map() vs applymap()?", "map() works on a Series. applymap() applies a function to every single element across an entire DataFrame."],
-            ["Pandas", "Check unique items?", "df['col'].unique() returns an array of the distinct values."],
-            ["Pandas", "Drop a column?", "df.drop('column_name', axis=1)."],
-            ["Pandas", "What is merge_asof?", "Performs a fuzzy merge matching on the nearest key rather than equal keys (great for timestamps)."],
-            ["Pandas", "String methods?", "Access via .str (e.g., df['text'].str.lower())."],
-            ["Pandas", "Save to CSV?", "df.to_csv('filename.csv', index=False)."],
-
-            // Matplotlib (30)
-            ["Matplotlib", "Pyplot vs OO API?", "Pyplot uses stateful commands. OO API creates distinct Figure and Axes objects for explicit control."],
-            ["Matplotlib", "Figure vs Axes?", "Figure is the blank window canvas. Axes is the actual plot area containing data and ticks."],
-            ["Matplotlib", "Create subplots?", "fig, axes = plt.subplots(nrows=2, ncols=2) creates a 2x2 grid."],
-            ["Matplotlib", "Chart for distribution?", "Histogram (plt.hist())."],
-            ["Matplotlib", "Chart for categories?", "Bar chart (plt.bar())."],
-            ["Matplotlib", "Chart for correlation?", "Scatter plot (plt.scatter())."],
-            ["Matplotlib", "What is tight_layout()?", "Automatically adjusts subplot padding so titles and labels don't overlap."],
-            ["Matplotlib", "Add a legend?", "Call plt.legend() after ensuring plot lines have the 'label' parameter set."],
-            ["Matplotlib", "Save plot as image?", "plt.savefig('file.png', dpi=300)."],
-            ["Matplotlib", "What is alpha?", "Controls transparency of plot elements (0 is invisible, 1 is solid)."],
-            ["Matplotlib", "Multiple lines on one chart?", "Call ax.plot() multiple times before showing the plot."],
-            ["Matplotlib", "Add annotations?", "Use plt.annotate() with text, xy coords, and arrowprops."],
-            ["Matplotlib", "What is twinx()?", "Creates a secondary Y-axis on the right that shares the same X-axis."],
-            ["Matplotlib", "What is GridSpec?", "Module allowing complex subplot grids where charts span multiple rows or cols."],
-            ["Matplotlib", "Set axis limits?", "plt.xlim(min, max) and plt.ylim(min, max)."],
-            ["Matplotlib", "What is a colormap (cmap)?", "Color gradient applied to data points based on value (e.g., 'viridis')."],
-            ["Matplotlib", "Add a colorbar?", "plt.colorbar() adds a scale showing what colors represent in a heatmap."],
-            ["Matplotlib", "fill_between()?", "Fills area between two horizontal curves, usually for confidence intervals."],
-            ["Matplotlib", "Reference lines?", "axhline(y_val) for horizontal, axvline(x_val) for vertical."],
-            ["Matplotlib", "Change line styles?", "Pass linestyle argument ('--' for dashed, ':' for dotted)."],
-            ["Matplotlib", "Rotate axis labels?", "plt.xticks(rotation=45)."],
-            ["Matplotlib", "What is a Boxplot?", "Shows data distribution via quartiles and highlights outliers (plt.boxplot())."],
-            ["Matplotlib", "What is a Violinplot?", "Like a boxplot but adds kernel density estimation to show distribution shape."],
-            ["Matplotlib", "Pie chart?", "plt.pie()."],
-            ["Matplotlib", "Add text to canvas?", "plt.text(x, y, 'string')."],
-            ["Matplotlib", "sharex=True in subplots?", "Forces all subplots in a column to share the exact same X-axis scale."],
-            ["Matplotlib", "Change figure size?", "plt.figure(figsize=(width, height))."],
-            ["Matplotlib", "Clear a figure?", "plt.clf() clears figure, plt.cla() clears active axes."],
-            ["Matplotlib", "Logarithmic scale?", "plt.xscale('log')."],
-            ["Matplotlib", "Add grid lines?", "plt.grid(True)."],
-
-            // Tableau (35)
-            ["Tableau", "Live vs Extract?", "Live queries DB directly. Extract saves a compressed data snapshot to memory for extreme speed."],
-            ["Tableau", "Dimensions vs Measures?", "Dimensions (blue) are categorical slicing data. Measures (green) are quantitative numerical data."],
-            ["Tableau", "Blue vs Green pills?", "Blue = Discrete (creates headers). Green = Continuous (creates axes)."],
-            ["Tableau", "Order of Operations?", "Extract -> Data Source -> Context -> Dimension -> Measure -> Table Calc Filters."],
-            ["Tableau", "Context Filter?", "Forces a filter to execute earlier in the pipeline, BEFORE Top N or Fixed LOD calculations."],
-            ["Tableau", "FIXED LOD?", "Calculates an aggregation at a specific dimension level, ignoring all other dimensions in the view."],
-            ["Tableau", "Sets vs Groups?", "Groups statically combine members. Sets dynamically evaluate members against a condition (In/Out)."],
-            ["Tableau", "Parameters?", "Dynamic, user-controlled variables (numbers/strings) used to drive calculations or filters interactively."],
-            ["Tableau", "Dual-axis chart?", "Overlays two measures with independent scales. Always right-click and 'Synchronize Axes'!"],
-            ["Tableau", "Blending vs Joins?", "Joins merge row-level data in the source. Blending queries tables separately and visually combines aggregated results."],
-            ["Tableau", "Relationships (Noodle)?", "Default data model keeping tables separate, preserving native granularity without duplicate row explosion."],
-            ["Tableau", "Table Calculation?", "Secondary calculation performed on the aggregated data already in the local view (e.g., Running Total)."],
-            ["Tableau", "Dashboard Actions?", "Interactivity (Filter, URL, Go to Sheet) triggered when users click or hover over a mark."],
-            ["Tableau", "Story Points?", "A sequence of dashboards presented step-by-step to convey a narrative."],
-            ["Tableau", "Format null values?", "Right-click measure -> Format -> Special Values -> Type 'N/A' or hide the indicator."],
-            ["Tableau", "Heat map vs Treemap?", "Heat maps use color to show density in a matrix. Treemaps use nested colored rectangles."],
-            ["Tableau", "Bullet Graph?", "Bar chart variation comparing a primary measure against a target/threshold, saving space."],
-            ["Tableau", "Row Level Security (RLS)?", "Restricts data based on logged-in user identity via the USERNAME() function and user filters."],
-            ["Tableau", "Pages Shelf?", "Breaks views into sequences (like a flipbook), often used to animate data changes over time."],
-            ["Tableau", "ATTR() function?", "Returns the value if only one exists in the group; if multiple distinct values exist, it returns an asterisk (*)."],
-            ["Tableau", "Hierarchies?", "Structured arrangement of dimensions (Year -> Quarter -> Month) allowing drill-down/roll-up."],
-            ["Tableau", "Aliases?", "Custom display names for dimension members without altering underlying data source."],
-            ["Tableau", "Optimize slow dashboard?", "Use extracts, hide unused fields, minimize marks, replace heavy LODs with DB views, limit filters."],
-            ["Tableau", "Custom SQL?", "Writing raw SQL to pull a specific dataset into Tableau instead of dragging tables."],
-            ["Tableau", "Waterfall chart?", "Shows how an initial value is affected by positive/negative intermediate values to reach a final total."],
-            ["Tableau", "Show Me menu?", "Highlights and automatically builds suggested charts based on selected fields."],
-            ["Tableau", "COUNT vs COUNTD?", "COUNT totals all records. COUNTD counts only distinct, unique records."],
-            ["Tableau", "ZN() function?", "Checks if a value is Null and returns Zero. Vital for math operations where Nulls break formulas."],
-            ["Tableau", "Blended Axis?", "Places multiple measures on a single shared axis (using Measure Values/Names)."],
-            ["Tableau", "Cross-database join?", "Joining tables from different database systems (e.g., Oracle and Excel) in one data source."],
-            ["Tableau", "INCLUDE vs EXCLUDE LOD?", "INCLUDE calculates at a finer granularity. EXCLUDE ignores view dimensions to calculate at a higher level."],
-            ["Tableau", "Compute Using?", "Dictates the direction (Down, Across, Cell) a Table Calc uses to aggregate data."],
-            ["Tableau", "Make a donut chart?", "Create pie chart, overlay a slightly smaller white dual-axis circle chart, and synchronize."],
-            ["Tableau", "Tooltips?", "Pop-up text boxes appearing on hover, useful for extra context or 'Viz in Tooltip' mini-charts."],
-            ["Tableau", "Tableau Prep?", "Separate desktop product purely for advanced ETL (cleaning, joining, shaping data)."],
-
-            // Statistics (40)
-            ["Statistics", "Descriptive vs Inferential?", "Descriptive summarizes current data. Inferential uses sample data to make predictions about a larger population."],
-            ["Statistics", "Variance & Standard Deviation?", "Variance is average squared distance from mean. Std Dev is the square root, returning to original units."],
-            ["Statistics", "Normal Distribution?", "Symmetrical bell curve following the 68-95-99.7 empirical rule."],
-            ["Statistics", "Skewness?", "Measure of asymmetry. Right-skewed: tail extends right (Mean > Median). Left-skewed: tail extends left."],
-            ["Statistics", "Central Limit Theorem?", "Sampling distribution of sample means approaches a normal distribution as sample size grows, regardless of population shape."],
-            ["Statistics", "Parameter vs Statistic?", "Parameter describes the entire true population. Statistic describes a sample subset."],
-            ["Statistics", "What is a p-value?", "Probability of observing your results assuming the null hypothesis is completely true."],
-            ["Statistics", "Alpha (Significance)?", "Threshold (usually 0.05). If p-value < alpha, you reject the null hypothesis."],
-            ["Statistics", "Type I vs Type II Error?", "Type I: False Positive (rejecting true null). Type II: False Negative (failing to reject false null)."],
-            ["Statistics", "Statistical Power?", "Probability of correctly rejecting a false null hypothesis (successfully detecting a real effect)."],
-            ["Statistics", "Confidence Interval?", "A range of values calculated from a sample highly likely to contain the true population parameter."],
-            ["Statistics", "Z-test vs T-test?", "Z-test: large samples (>30), known variance. T-test: small samples, unknown variance."],
-            ["Statistics", "What is ANOVA?", "Analysis of Variance tests if there is a significant difference between means of 3+ independent groups."],
-            ["Statistics", "Chi-Square Test?", "Tests if there is a significant association between two categorical variables."],
-            ["Statistics", "Correlation vs Covariance?", "Covariance shows direction. Correlation standardizes it (-1 to 1) to show both direction and strength."],
-            ["Statistics", "Pearson vs Spearman?", "Pearson measures linear relationships. Spearman measures monotonic relationships using ranked data (handles outliers better)."],
-            ["Statistics", "What is R-squared?", "Proportion of variance in the dependent variable explained by the independent variables."],
-            ["Statistics", "Adjusted R-squared?", "Like R-squared but penalizes the model for adding useless independent variables."],
-            ["Statistics", "Heteroscedasticity?", "When the variance of residuals in a regression model is unequal, violating regression assumptions."],
-            ["Statistics", "Multicollinearity?", "When independent variables in regression are highly correlated, hiding individual effects."],
-            ["Statistics", "Law of Large Numbers?", "As sample size grows, sample average converges to the true expected value of the population."],
-            ["Statistics", "Bayes Theorem?", "Calculates probability of an event based on prior knowledge, updating beliefs as new evidence arrives."],
-            ["Statistics", "PDF vs CDF?", "Probability Density Function outputs exact value probability. Cumulative Distribution Function outputs probability of value <= X."],
-            ["Statistics", "Poisson Distribution?", "Models probability of a given number of events occurring in a fixed interval of time/space."],
-            ["Statistics", "Binomial Distribution?", "Models number of successes in a fixed number of independent binary trials (e.g., coin flips)."],
-            ["Statistics", "Bootstrapping?", "Resampling technique (with replacement) to estimate sampling distributions and confidence intervals."],
-            ["Statistics", "Interquartile Range (IQR)?", "Difference between 75th (Q3) and 25th (Q1) percentiles, representing the middle 50% of data."],
-            ["Statistics", "Detect outliers (Z-score)?", "Convert data to standard deviations from mean. Z-score > 3 or < -3 is usually an outlier."],
-            ["Statistics", "Detect outliers (IQR)?", "Values below Q1 - (1.5*IQR) or above Q3 + (1.5*IQR)."],
-            ["Statistics", "Confounding Variable?", "Unmeasured 3rd variable influencing both the cause and effect, creating a spurious association."],
-            ["Statistics", "What is Kurtosis?", "Measures 'tailedness'. High kurtosis means heavy tails (lots of extreme outliers)."],
-            ["Statistics", "What is A/B Testing?", "Randomized experiment with two variants to see which performs better for a specific goal."],
-            ["Statistics", "Selection Bias?", "Error introduced when sample data isn't properly randomized, making it unrepresentative."],
-            ["Statistics", "Survivorship Bias?", "Logical error focusing only on entities that passed a selection process, ignoring failures."],
-            ["Statistics", "Expected Value?", "Long-run average outcome of a random variable, calculated by multiplying outcomes by probabilities."],
-            ["Statistics", "What is p-hacking?", "Misusing data analysis to find patterns that look statistically significant but are actually random chance."],
-            ["Statistics", "Margin of Error?", "Radius of the confidence interval representing the amount of random sampling error."],
-            ["Statistics", "Null Hypothesis (H0)?", "Default assumption that there is no relationship, no effect, or no difference between groups."],
-            ["Statistics", "Alternative Hypothesis (H1)?", "The statement you are trying to prove, contradicting the null hypothesis."],
-            ["Statistics", "Standard Error?", "Standard deviation of the sampling distribution of a statistic (usually the mean)."],
-
-            // Analysis (30)
-            ["Analysis", "Goal of Univariate Analysis?", "Describe and summarize a single variable to find central tendency, spread, and outliers."],
-            ["Analysis", "5 stats in a Boxplot?", "Minimum, Q1, Median, Q3, Maximum."],
-            ["Analysis", "What is Data Binning?", "Grouping continuous numerical data into categorical intervals (e.g., ages to 'Teen', 'Adult')."],
-            ["Analysis", "Goal of Bivariate Analysis?", "Determine if a relationship or correlation exists between exactly two variables."],
-            ["Analysis", "Correlation implies Causation?", "No. Two variables moving together doesn't mean one causes the other; a lurking variable might exist."],
-            ["Analysis", "Analyze Categorical + Continuous?", "Use grouped boxplots or overlapping histograms. Validate with T-test or ANOVA."],
-            ["Analysis", "Analyze two Categoricals?", "Use cross-tabulation (contingency tables) or stacked bar charts. Validate with Chi-Square."],
-            ["Analysis", "Analyze two Continuous?", "Use scatter plots or line charts. Calculate Pearson or Spearman correlation."],
-            ["Analysis", "Goal of Trivariate Analysis?", "Analyze three variables simultaneously, often to see if variable C changes the relationship between A and B."],
-            ["Analysis", "Visualize 3 continuous variables?", "2D scatter plot for X and Y, with bubble size or color gradient representing variable Z."],
-            ["Analysis", "What is an Interaction Term?", "Occurs when the effect of one variable on the outcome depends heavily on the level of another variable."],
-            ["Analysis", "Simpson's Paradox?", "A trend appears in multiple groups of data but disappears or reverses when groups are combined."],
-            ["Analysis", "Facet Grid (Trellis Chart)?", "Multiple small identical charts broken out by a categorical variable (e.g., Sales vs Profit split by Region)."],
-            ["Analysis", "What is a Pairplot?", "Grid of scatter plots showing bivariate relationships between all pairs of continuous variables simultaneously."],
-            ["Analysis", "Heatmap in Multivariate?", "Visualizes a correlation matrix, showing relationship strengths between all numerical variables via color."],
-            ["Analysis", "How to cap outliers?", "Winsorizing: replacing extreme values with the value at a set percentile (like the 99th)."],
-            ["Analysis", "Dimensionality Reduction?", "Techniques to reduce the number of variables while retaining as much variance (info) as possible."],
-            ["Analysis", "What is PCA?", "Transforms highly correlated variables into a smaller set of uncorrelated Principal Components."],
-            ["Analysis", "Handle heavy skew?", "Apply a mathematical transformation (logarithmic or square root) to normalize the distribution."],
-            ["Analysis", "What is a Lurking Variable?", "A variable not included in the analysis that falsely drives the relationship between measured variables."],
-            ["Analysis", "Visualize 1 Continuous + 2 Categorical?", "Grouped bar chart or grouped boxplot (X-axis for Category 1, Hue/Color for Category 2)."],
-            ["Analysis", "Why avoid 3D scatter plots?", "Difficult to interpret on a 2D screen due to perspective distortion. Color/size mapping is better."],
-            ["Analysis", "Frequency Distribution?", "Summary of how often each distinct value occurs in a variable, easily shown via histogram."],
-            ["Analysis", "Monotonic Relationship?", "Variables move in the same relative direction but not necessarily at a constant rate."],
-            ["Analysis", "What is Imputation?", "Replacing missing data points with substituted values (mean, median, predictive algorithm) before analysis."],
-            ["Analysis", "Extrapolation vs Interpolation?", "Interpolation predicts within the range of known data. Extrapolation predicts outside it (highly risky)."],
-            ["Analysis", "Cross-validation?", "Splitting data into subsets to test a model on unseen data, preventing overfitting."],
-            ["Analysis", "Data Leakage?", "When info from outside the training dataset is used to create the model, leading to overly optimistic results."],
-            ["Analysis", "Feature Engineering?", "Using domain knowledge to create new variables from raw data to improve model performance."],
-            ["Analysis", "Normalization vs Standardization?", "Normalization scales data to [0,1]. Standardization centers data around mean 0 with standard dev 1."]
-        ];
-
-        // IndexedDB Configuration
-        let db;
-        let activeData = [];
-        let currentCategory = 'All';
-        let currentView = 'home';
-        const DB_NAME = 'PrepFeedDB_V2';
-        const STORE_NAME = 'qaStore';
-
-        // SVGs
-        const iconHeart = `<svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></svg>`;
-        const iconHeartFilled = `<svg viewBox="0 0 24 24"><path d="M20.884 13.19c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z" fill="currentColor"></path></svg>`;
-        const iconBookmark = `<svg viewBox="0 0 24 24"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.224-.5.5v14.56l6-4.29 6 4.29V4.5c0-.276-.224-.5-.5-.5h-11z"></path></svg>`;
-        const iconBookmarkFilled = `<svg viewBox="0 0 24 24"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5z" fill="currentColor"></path></svg>`;
-        const iconSpark = `<svg viewBox="0 0 24 24"><path d="M11.5 2L10 11H3l9 11 1.5-9h7l-9-11z"/></svg>`;
-
-        // IndexedDB Logic
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, 1);
-                request.onerror = () => reject("IndexedDB Error");
-                
-                request.onsuccess = (e) => {
-                    db = e.target.result;
-                    resolve(db);
-                };
-                
-                request.onupgradeneeded = (e) => {
-                    const database = e.target.result;
-                    if (!database.objectStoreNames.contains(STORE_NAME)) {
-                        const store = database.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                        compressedData.forEach((d, i) => {
-                            store.add({
-                                id: i + 1, c: d[0], q: d[1], a: d[2],
-                                saved: false, liked: false,
-                                likesCount: Math.floor(Math.random() * 800) + 42
-                            });
-                        });
-                    }
-                };
-            });
-        }
-
-        function loadData() {
-            return new Promise((resolve) => {
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.getAll();
-                request.onsuccess = () => {
-                    activeData = request.result;
-                    resolve();
-                };
-            });
-        }
-
-        function updateDB(item) {
-            const transaction = db.transaction([STORE_NAME], 'readwrite');
-            transaction.objectStore(STORE_NAME).put(item);
-        }
-
-        // DOM Render
-        const feedContainer = document.getElementById('feedContainer');
-        function renderFeed(data) {
-            feedContainer.innerHTML = '';
-            
-            if (data.length === 0) {
-                feedContainer.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                        <h3>No matches found</h3>
-                        <p>Try exploring another topic.</p>
-                    </div>`;
-                return;
-            }
-
-            data.forEach((item) => {
-                const post = document.createElement('article');
-                post.className = 'post';
-                post.innerHTML = `
-                    <div class="post-avatar-wrapper">
-                        <div class="post-avatar">
-                            ${iconSpark}
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        <div class="post-meta">
-                            <span class="post-author">Prep AI</span>
-                            <span class="post-category">${item.c}</span>
-                        </div>
-                        <div class="post-question" onclick="toggleAnswer(this)">${item.q}</div>
-                        <div class="post-answer-wrapper">
-                            <span class="answer-label">Answer</span>
-                            <div class="post-answer">${item.a}</div>
-                        </div>
-                        <div class="post-actions">
-                            <button class="action-btn like-btn ${item.liked ? 'liked' : ''}" onclick="toggleLike(this, ${item.id})">
-                                ${item.liked ? iconHeartFilled : iconHeart} 
-                                <span>${item.likesCount}</span>
-                            </button>
-                            <button class="action-btn save-btn ${item.saved ? 'saved' : ''}" onclick="toggleSave(this, ${item.id})">
-                                ${item.saved ? iconBookmarkFilled : iconBookmark}
-                            </button>
-                        </div>
-                    </div>
-                `;
-                feedContainer.appendChild(post);
-            });
-        }
-
-        // Interactions
-        window.toggleAnswer = (el) => el.closest('.post').classList.toggle('open');
-
-        window.toggleLike = (btn, id) => {
-            const item = activeData.find(d => d.id === id);
-            item.liked = !item.liked;
-            item.likesCount += item.liked ? 1 : -1;
-            updateDB(item);
-            btn.classList.toggle('liked');
-            btn.innerHTML = `${item.liked ? iconHeartFilled : iconHeart} <span>${item.likesCount}</span>`;
-        };
-
-        window.toggleSave = (btn, id) => {
-            const item = activeData.find(d => d.id === id);
-            item.saved = !item.saved;
-            updateDB(item);
-            btn.classList.toggle('saved');
-            btn.innerHTML = item.saved ? iconBookmarkFilled : iconBookmark;
-            if (currentView === 'saved' && !item.saved) applyFilters();
-        };
-
-        // Navigation & Filters
-        window.filterCategory = (cat, el) => {
-            document.querySelectorAll('.topic-pill').forEach(pill => pill.classList.remove('active'));
-            el.classList.add('active');
-            currentCategory = cat;
-            applyFilters();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.searchQuestions = () => applyFilters();
-
-        function applyFilters() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = activeData;
-            if (currentView === 'saved') filtered = filtered.filter(d => d.saved);
-            if (currentCategory !== 'All') filtered = filtered.filter(d => d.c === currentCategory);
-            if (q) filtered = filtered.filter(d => d.q.toLowerCase().includes(q) || d.a.toLowerCase().includes(q));
-            renderFeed(filtered);
-        }
-
-        window.toggleView = (view) => {
-            currentView = view;
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('nav' + view.charAt(0).toUpperCase() + view.slice(1)).classList.add('active');
-
-            const title = document.getElementById('headerTitle');
-            const searchBox = document.getElementById('searchContainer');
-            const topicScroll = document.getElementById('topicScroll');
-
-            if (view === 'search') {
-                title.innerText = "Search";
-                searchBox.classList.add('active');
-                topicScroll.style.display = 'flex';
-                document.getElementById('searchInput').focus();
-            } else if (view === 'saved') {
-                title.innerText = "Bookmarks";
-                searchBox.classList.remove('active');
-                topicScroll.style.display = 'none';
-            } else {
-                title.innerText = "For You";
-                searchBox.classList.remove('active');
-                topicScroll.style.display = 'flex';
-                document.getElementById('searchInput').value = '';
-            }
-
-            currentCategory = 'All';
-            document.querySelectorAll('.topic-pill').forEach(el => el.classList.remove('active'));
-            document.querySelector('.topic-pill').classList.add('active');
-            applyFilters();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        // Boot
-        async function bootApp() {
-            try {
-                await initDB();
-                await loadData();
-                applyFilters();
-            } catch (err) {
-                feedContainer.innerHTML = `<div class="empty-state"><h3>Database Error</h3><p>${err}</p></div>`;
-            }
-        }
-        bootApp();
-    </script>
 </body>
 </html>
